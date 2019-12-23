@@ -35,7 +35,7 @@ namespace TabView4
         /// Tabs
         /// </summary>
         public static readonly BindableProperty TabsProperty =
-            BindableProperty.Create(nameof(Tabs), typeof(IList<Tab>), typeof(TabView),
+            BindableProperty.Create(nameof(Tabs), typeof(List<Tab>), typeof(TabView),
                 defaultValueCreator: b =>
                 {
                     return new List<Tab>();
@@ -44,10 +44,14 @@ namespace TabView4
                 {
                     (b as TabView).InitTabs();
                 });
-        public IList<Tab> Tabs => TabsContent;
-        public IList<Tab> TabsContent
+        public List<Tab> Tabs
         {
-            get { return (IList<Tab>)GetValue(TabsProperty); }
+            get { return (List<Tab>)GetValue(TabsProperty); }
+            set { SetValue(TabsProperty, value); }
+        }
+        public List<Tab> TabsContent
+        {
+            get { return (List<Tab>)GetValue(TabsProperty); }
             set { SetValue(TabsProperty, value); }
         }
 
@@ -87,8 +91,7 @@ namespace TabView4
             int actualId = 0;
             foreach (var item in Tabs)
             {
-                item.BindingContext = this;
-                item.TabHost = this;
+                item.SetHost(this);
                 item.TabId = i;
 
                 var tab = new Grid();

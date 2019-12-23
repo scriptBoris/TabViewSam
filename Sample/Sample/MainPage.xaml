@@ -3,14 +3,33 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:tab="clr-namespace:TabView4;assembly=TabView4"
+             xmlns:local="clr-namespace:Sample"
              mc:Ignorable="d"
              x:Class="Sample.MainPage">
 
+    <d:ContentPage.BindingContext>
+        <local:MainPage/>
+    </d:ContentPage.BindingContext>
+
     <StackLayout>
-        <!-- Place new controls here -->
-        <Label Text="Welcome to Xamarin.Forms!" 
-           HorizontalOptions="Center"
-           VerticalOptions="CenterAndExpand" />
+        <!--TabView-->
+        <tab:TabView>
+            <tab:Tab Title="{Binding Tab1Title}">
+                <StackLayout>
+                    <Label Text="{Binding Tab1Title}"/>
+                </StackLayout>
+            </tab:Tab>
+            
+            <tab:Tab Title="Tab2">
+                <StackLayout>
+                    <Label Text="Big content tab2"/>
+                    <Label Text="Big content tab2"/>
+                    <Label Text="Big content tab2"/>
+                    <Label Text="Big content tab2"/>
+                </StackLayout>
+            </tab:Tab>
+        </tab:TabView>
     </StackLayout>
 
 </ContentPage>

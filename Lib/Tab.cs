@@ -12,8 +12,8 @@ namespace TabView4
         public Label LabelTitle { get; private set; }
         public Image ImageIcon { get; private set; }
         public BoxView Footer { get; private set; }
+        internal TabView TabHost { get; private set; }
 
-        public TabView TabHost;
         public int TabId;
 
         public Tab()
@@ -22,14 +22,17 @@ namespace TabView4
             {
                 HorizontalTextAlignment = TextAlignment.Center,
                 VerticalTextAlignment = TextAlignment.Center,
-                BindingContext = this,
             };
 
             ImageIcon = new Image();
-            ImageIcon.BindingContext = this;
 
             Footer = new BoxView();
-            Footer.BindingContext = this;
+        }
+
+        internal void SetHost(TabView host)
+        {
+            TabHost = host;
+            BindingContext = host;
         }
 
         // Title

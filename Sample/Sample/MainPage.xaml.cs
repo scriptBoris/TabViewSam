@@ -16,6 +16,9 @@ namespace Sample
         public MainPage()
         {
             InitializeComponent();
+            BindingContext = this;
         }
+
+        public string Tab1Title { get; set; } = "Hello world!";
     }
 }
