@@ -16,6 +16,7 @@ namespace TabView4
         internal BoxView Footer;
         internal TabView TabHost;
         internal int TabId;
+        internal bool IsSelected;
 
         public Tab()
         {
@@ -48,6 +49,10 @@ namespace TabView4
             var tapGesture = new TapGestureRecognizer();
             tapGesture.Tapped += (o, e) => { host.OpenTab(TabId); };
             TabCell.GestureRecognizers.Add(tapGesture);
+
+            LabelTitle.FontSize = TitleFontSize ?? host.TitleFontSize;
+            LabelTitle.TextColor = TitleColor.IsDefault ? TitleColor : host.TitleColor;
+            TabCell.BackgroundColor = BackgroundColor.IsDefault ? host.TabsBackgroundColor : BackgroundColor;
         }
 
         // Title
@@ -61,6 +66,82 @@ namespace TabView4
         {
             get { return (string)GetValue(TitleProperty); }
             set { SetValue(TitleProperty, value); }
+        }
+
+        // Title font size
+        public static readonly BindableProperty TitleFontSizeProperty =
+            BindableProperty.Create(nameof(TitleFontSize), typeof(double?), typeof(Tab), null,
+            propertyChanged: (b, o, n) =>
+            {
+                var self = b as Tab;
+                double? value = (double?)n;
+                if (value.HasValue)
+                    self.LabelTitle.FontSize = value.Value;
+                else
+                    self.LabelTitle.FontSize = self.TabHost?.TitleFontSize ?? 16.0;
+            });
+        public double? TitleFontSize
+        {
+            get { return (double?)GetValue(TitleFontSizeProperty); }
+            set { SetValue(TitleFontSizeProperty, value); }
+        }
+
+        // Title color
+        public static readonly BindableProperty TitleColorProperty =
+            BindableProperty.Create(nameof(TitleColor), typeof(Color), typeof(Tab),
+            propertyChanged: (b, o, n) =>
+            {
+                (b as Tab).LabelTitle.TextColor = (Color)n;
+            });
+        public Color TitleColor
+        {
+            get { return (Color)GetValue(TitleColorProperty); }
+            set { SetValue(TitleColorProperty, value); }
+        }
+
+        // Selected color
+        public static readonly BindableProperty SelectedColorProperty =
+            BindableProperty.Create(nameof(SelectedColor), typeof(Color), typeof(Tab), null,
+                propertyChanged:(b,o,n)=>
+                {
+                    var self = b as Tab;
+                    if (self.IsSelected)
+                        self.TabCell.BackgroundColor = (Color)n;
+                });
+        public Color SelectedColor
+        {
+            get { return (Color)GetValue(SelectedColorProperty); }
+            set { SetValue(SelectedColorProperty, value); }
+        }
+
+        // Selected footer color
+        public static readonly BindableProperty SelectedFooterColorProperty =
+            BindableProperty.Create(nameof(SelectedFooterColor), typeof(Color), typeof(Tab), null,
+                propertyChanged: (b, o, n) =>
+                {
+                    var self = b as Tab;
+                    if (self.IsSelected)
+                        self.Footer.BackgroundColor = (Color)n;
+                });
+        public Color SelectedFooterColor
+        {
+            get { return (Color)GetValue(SelectedFooterColorProperty); }
+            set { SetValue(SelectedFooterColorProperty, value); }
+        }
+
+        // Background color
+        public static readonly BindableProperty BackgroundColorProperty =
+            BindableProperty.Create(nameof(BackgroundColor), typeof(Color), typeof(Tab), null,
+                propertyChanged: (b,o,n ) =>
+                {
+                    var self = b as Tab;
+                    if (!self.IsSelected)
+                        self.TabCell.BackgroundColor = (Color)n;
+                });
+        public Color BackgroundColor
+        {
+            get { return (Color)GetValue(BackgroundColorProperty); }
+            set { SetValue(BackgroundColorProperty, value); }
         }
 
         // Icon
@@ -82,8 +163,10 @@ namespace TabView4
             BindableProperty.Create(nameof(Content), typeof(View), typeof(Tab), null,
                 propertyChanged: (b, o, n) =>
                 {
+                    var self = b as Tab;
                     var content = n as View;
-                    content.IsVisible = false;
+                    if (self.TabHost?.SelectedTab != self)
+                        content.IsVisible = false;
                 });
         public View Content
         {
@@ -93,20 +176,10 @@ namespace TabView4
 
         [EditorBrowsable(EditorBrowsableState.Never)]
         public View ContentXaml => Content;
-        //{
-        //    get { return (View)GetValue(ContentProperty); }
-        //    set { SetValue(ContentProperty, value); }
-        //}
-
-        //public View Content => ContentSystem;
 
         // Is visible
         public static readonly BindableProperty IsVisibleProperty =
-            BindableProperty.Create(nameof(IsVisible), typeof(bool), typeof(Tab),
-                defaultValueCreator: (b) =>
-                {
-                    return true;
-                },
+            BindableProperty.Create(nameof(IsVisible), typeof(bool), typeof(Tab), true,
                 propertyChanged: (b, o, n) =>
                 {
                     var self = (Tab)b;
@@ -117,11 +190,6 @@ namespace TabView4
         {
             get { return (bool)GetValue(IsVisibleProperty); }
             set { SetValue(IsVisibleProperty, value); }
-        }
-
-        protected override void OnBindingContextChanged()
-        {
-            base.OnBindingContextChanged();
         }
     }
 }

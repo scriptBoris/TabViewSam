@@ -16,16 +16,19 @@
         <!--TabView-->
         <tab:TabView>
             <tab:Tab Title="{Binding TabTitle1}"
+                     Icon="icon1.png"
+                     SelectedFooterColor="White"
                      IsVisible="{Binding IsShowTab1}">
                 <StackLayout>
                     <Label Text="Big content tab1"/>
-                    <Label Text="Big content tab1"/>
+                    <Label Text="Sample content"/>
                     <Label Text="Big content tab1"/>
                     <Label Text="Big content tab1"/>
                 </StackLayout>
             </tab:Tab>
 
             <tab:Tab Title="{Binding TabTitle2}"
+                     Icon="icon2.png"
                      IsVisible="{Binding IsShowTab2}">
                 <StackLayout>
                     <Label Text="Big content tab2"/>
@@ -36,6 +39,7 @@
             </tab:Tab>
 
             <tab:Tab Title="{Binding TabTitle3}"
+                     Icon="icon3.png"
                      IsVisible="{Binding IsShowTab3}">
                 <StackLayout>
                     <Label Text="Big content tab3"/>
@@ -52,6 +56,7 @@
                 Clicked="Button_Clicked1"/>
         <Button Text="Show/Hide tab3"
                 Clicked="Button_Clicked2"/>
+        <Label Text="Hello"/>
     </StackLayout>
 
 </ContentPage>
