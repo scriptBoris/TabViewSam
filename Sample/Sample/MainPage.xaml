@@ -15,21 +15,43 @@
     <StackLayout>
         <!--TabView-->
         <tab:TabView>
-            <tab:Tab Title="{Binding Tab1Title}">
+            <tab:Tab Title="{Binding TabTitle1}"
+                     IsVisible="{Binding IsShowTab1}">
                 <StackLayout>
-                    <Label Text="{Binding Tab1Title}"/>
+                    <Label Text="Big content tab1"/>
+                    <Label Text="Big content tab1"/>
+                    <Label Text="Big content tab1"/>
+                    <Label Text="Big content tab1"/>
                 </StackLayout>
             </tab:Tab>
-            
-            <tab:Tab Title="Tab2">
+
+            <tab:Tab Title="{Binding TabTitle2}"
+                     IsVisible="{Binding IsShowTab2}">
                 <StackLayout>
                     <Label Text="Big content tab2"/>
                     <Label Text="Big content tab2"/>
                     <Label Text="Big content tab2"/>
                     <Label Text="Big content tab2"/>
+                </StackLayout>
+            </tab:Tab>
+
+            <tab:Tab Title="{Binding TabTitle3}"
+                     IsVisible="{Binding IsShowTab3}">
+                <StackLayout>
+                    <Label Text="Big content tab3"/>
+                    <Label Text="Big content tab3"/>
+                    <Label Text="Big content tab3"/>
+                    <Label Text="Big content tab3"/>
                 </StackLayout>
             </tab:Tab>
         </tab:TabView>
+
+        <Button Text="Show/Hide tab1"
+                Clicked="Button_Clicked"/>
+        <Button Text="Show/Hide tab2"
+                Clicked="Button_Clicked1"/>
+        <Button Text="Show/Hide tab3"
+                Clicked="Button_Clicked2"/>
     </StackLayout>
 
 </ContentPage>

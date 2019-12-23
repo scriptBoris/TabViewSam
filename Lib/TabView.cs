@@ -1,86 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using Xamarin.Forms;
 
 namespace TabView4
 {
     [ContentProperty("TabsContent")]
-    public class TabView : Grid
+    [Xamarin.Forms.Internals.Preserve(AllMembers = true)]
+    public sealed class TabView : Grid
     {
+        private readonly Grid headerGrid;
         private Tab selectedTab;
-        private Grid headerGrid;
-        private List<View> contentList = new List<View>();
 
         public TabView()
         {
+            // Header & Content
             RowSpacing = 0;
+            RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+            RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
+
             headerGrid = new Grid();
+            headerGrid.HorizontalOptions = LayoutOptions.FillAndExpand;
             headerGrid.ColumnSpacing = 0;
             SetRow(headerGrid, 0);
             Children.Add(headerGrid);
-
-
-            // Header & Content
-            RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-            RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
-        }
-
-        protected override void OnParentSet()
-        {
-            InitTabs();
-        }
-
-        /// <summary>
-        /// Tabs
-        /// </summary>
-        public static readonly BindableProperty TabsProperty =
-            BindableProperty.Create(nameof(Tabs), typeof(List<Tab>), typeof(TabView),
-                defaultValueCreator: b =>
-                {
-                    return new List<Tab>();
-                },
-                propertyChanged: (b, o, n) =>
-                {
-                    (b as TabView).InitTabs();
-                });
-        public List<Tab> Tabs
-        {
-            get { return (List<Tab>)GetValue(TabsProperty); }
-            set { SetValue(TabsProperty, value); }
-        }
-        public List<Tab> TabsContent
-        {
-            get { return (List<Tab>)GetValue(TabsProperty); }
-            set { SetValue(TabsProperty, value); }
-        }
-
-        /// <summary>
-        /// Head background color
-        /// </summary>
-        public static readonly BindableProperty HeadBackgroundColorProperty =
-            BindableProperty.Create(nameof(HeadBackgroundColor), typeof(Color), typeof(TabView), null,
-                propertyChanged: (b, o, n) =>
-                {
-                    var self = (TabView)b;
-                    self.headerGrid.BackgroundColor = (Color)n;
-                });
-        public Color HeadBackgroundColor
-        {
-            get { return (Color)GetValue(HeadBackgroundColorProperty); }
-            set { SetValue(HeadBackgroundColorProperty, value); }
         }
 
         private void InitTabs()
         {
             // Prepare
-            headerGrid.Children.Clear();
-            headerGrid.ColumnDefinitions.Clear();
-            foreach (var item in contentList)
-            {
-                Children.Remove(item);
-            }
-            contentList.Clear();
+            //Children.Clear();
+            //Children.Add(headerGrid);
+            //headerGrid.Children.Clear();
+            //headerGrid.ColumnDefinitions.Clear();
             selectedTab = null;
 
             if (Tabs == null)
@@ -93,31 +46,14 @@ namespace TabView4
             {
                 item.SetHost(this);
                 item.TabId = i;
+                headerGrid.Children.Add(item.TabCell);
 
-                var tab = new Grid();
-                tab.RowDefinitions.Add(new RowDefinition { Height = 36 });
-                tab.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-                tab.RowDefinitions.Add(new RowDefinition { Height = 5 });
-                tab.Children.Add(item.ImageIcon);
-                tab.Children.Add(item.LabelTitle);
-                tab.Children.Add(item.Footer);
-
-                // Tap event
-                var tapGesture = new TapGestureRecognizer();
-                tapGesture.Tapped += (w, e) => { OpenTab(item.TabId); };
-                tab.GestureRecognizers.Add(tapGesture);
-
-                Grid.SetRow(item.ImageIcon, 0);
-                Grid.SetRow(item.LabelTitle, 1);
-                Grid.SetRow(item.Footer, 2);
-
+                // Add content
                 if (item.Content != null)
                 {
                     SetRow(item.Content, 1);
                     Children.Add(item.Content);
-                    contentList.Add(item.Content);
                 }
-
 
                 if (item.IsVisible)
                 {
@@ -125,8 +61,7 @@ namespace TabView4
                     {
                         Width = new GridLength(1, GridUnitType.Star)
                     });
-                    SetColumn(tab, actualId);
-                    headerGrid.Children.Add(tab);
+                    SetColumn(item.TabCell, actualId);
                     actualId++;
 
                     if (selectedTab == null)
@@ -134,49 +69,69 @@ namespace TabView4
                         selectedTab = item;
                         item.Content.IsVisible = true;
                     }
+                    else
+                    {
+                        item.Content.IsVisible = false;
+                    }
                 }
 
-                item.TabCell = tab;
                 i++;
             }
         }
 
-        public void UpdateTabs()
+        internal void UpdateTabsVisibility(Tab tabChanged, bool isVisible)
         {
+            tabChanged.TabCell.IsVisible = isVisible;
+
+            foreach (var item in headerGrid.ColumnDefinitions)
+            {
+                if (tabChanged)
+                item
+            }
+
+            //if (!isVisible)
+            //{
+            //    var last = headerGrid.ColumnDefinitions.LastOrDefault();
+            //    last.Width = new GridLength(0);
+            //    //headerGrid.ColumnDefinitions.Remove(last);
+
+            //}
+            //else
+            //{
+            //    var match = headerGrid.ColumnDefinitions[tabChanged.TabId];
+            //    match.Width = GridLength.Star;
+            //    //headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
+            //}
+
             int i = 0;
             foreach (var item in Tabs)
             {
                 if (!item.IsVisible)
-                {
-                    headerGrid.Children.Remove(item.TabCell);
-                    var last = headerGrid.ColumnDefinitions.LastOrDefault();
-                    if (last != null)
-                        headerGrid.ColumnDefinitions.Remove(last);
-                }
-                else
-                {
-                    SetColumn(item.TabCell, i);
-                    i++;
-                }
+                    continue;
+
+                SetColumn(item.TabCell, i);
+                i++;
             }
 
-            if (selectedTab != null && !selectedTab.IsVisible)
+            if (selectedTab == tabChanged && !isVisible)
             {
                 selectedTab.Content.IsVisible = false;
-                selectedTab = null;
                 foreach (var item in Tabs)
                 {
-                    if (item.IsVisible)
+                    if (item.IsVisible && selectedTab != item)
                     {
                         selectedTab = item;
                         selectedTab.Content.IsVisible = true;
                         break;
                     }
                 }
+
+                if (selectedTab == tabChanged)
+                    selectedTab = null;
             }
         }
 
-        public void OpenTab(int index)
+        internal void OpenTab(int index)
         {
             var tab = Tabs[index];
 
@@ -197,6 +152,64 @@ namespace TabView4
 
             tab.Content.IsVisible = true;
             selectedTab = tab;
+        }
+
+        protected override void OnParentSet()
+        {
+            InitTabs();
+            base.OnParentSet();
+        }
+
+        protected override void OnBindingContextChanged()
+        {
+            base.OnBindingContextChanged();
+            if (Tabs?.Count > 0)
+            {
+                foreach (var item in Tabs)
+                    item.BindingContext = BindingContext;
+            }
+        }
+
+        /// <summary>
+        /// Tabs
+        /// </summary>
+        public static readonly BindableProperty TabsProperty =
+            BindableProperty.Create(nameof(Tabs), typeof(List<Tab>), typeof(TabView),
+                propertyChanged: (b, o, n) =>
+                {
+                    (b as TabView).InitTabs();
+                },
+                defaultValueCreator: b =>
+                {
+                    return new List<Tab>();
+                });
+        public List<Tab> Tabs
+        {
+            get { return (List<Tab>)GetValue(TabsProperty); }
+            set { SetValue(TabsProperty, value); }
+        }
+
+		[EditorBrowsable(EditorBrowsableState.Never)]
+        public List<Tab> TabsContent
+        {
+            get { return (List<Tab>)GetValue(TabsProperty); }
+            set { SetValue(TabsProperty, value); }
+        }
+
+        /// <summary>
+        /// Head background color
+        /// </summary>
+        public static readonly BindableProperty HeadBackgroundColorProperty =
+            BindableProperty.Create(nameof(HeadBackgroundColor), typeof(Color), typeof(TabView), null,
+                propertyChanged: (b, o, n) =>
+                {
+                    var self = (TabView)b;
+                    self.headerGrid.BackgroundColor = (Color)n;
+                });
+        public Color HeadBackgroundColor
+        {
+            get { return (Color)GetValue(HeadBackgroundColorProperty); }
+            set { SetValue(HeadBackgroundColorProperty, value); }
         }
     }
 }
