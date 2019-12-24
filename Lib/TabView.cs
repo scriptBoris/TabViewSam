@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using TabViewSam.Utils;
 using Xamarin.Forms;
 
-namespace TabView4
+namespace TabViewSam
 {
     [ContentProperty("TabsContent")]
     [Xamarin.Forms.Internals.Preserve(AllMembers = true)]
@@ -91,7 +92,7 @@ namespace TabView4
             if (tab == null)
                 return;
 
-            tab.TabCell.BackgroundColor = tab.BackgroundColor.IsDefault ? TabsBackgroundColor : tab.BackgroundColor;
+            tab.TabCell.BackgroundColor = ColorSelector.Set(tab.BackgroundColor, TabsBackgroundColor);
             tab.Footer.BackgroundColor = Color.Default;
         }
 
@@ -111,8 +112,14 @@ namespace TabView4
                 return;
 
             UnselectTab(o);
-            n.TabCell.BackgroundColor = n.SelectedColor.IsDefault ? SelectedColor : n.SelectedColor;
-            n.Footer.BackgroundColor = n.SelectedFooterColor.IsDefault ? SelectedFooterColor : n.SelectedFooterColor;
+
+            var setBg = ColorSelector.Set(n.SelectedColor, SelectedColor);
+            if (!setBg.IsDefault)
+                n.TabCell.BackgroundColor = ColorSelector.Set(n.SelectedColor, SelectedColor);
+            else
+                n.TabCell.BackgroundColor = TabsBackgroundColor;
+
+            n.Footer.BackgroundColor = ColorSelector.Set(n.SelectedFooterColor, SelectedFooterColor);
 
             oldSelectedTab = n;
         }
@@ -160,7 +167,7 @@ namespace TabView4
                 return;
 
             if (self.SelectedTab.SelectedFooterColor.IsDefault || self.SelectedTab.SelectedFooterColor == Color.Transparent)
-                self.SelectedTab.SelectedFooterColor = (Color)n;
+                self.SelectedTab.Footer.BackgroundColor = (Color)n;
         }
 
         private static void OnChangedTabsBackgroundColor(BindableObject b, object o, object n)
@@ -275,7 +282,7 @@ namespace TabView4
 
         // Selected color
         public static readonly BindableProperty SelectedColorProperty =
-            BindableProperty.Create(nameof(SelectedColor), typeof(Color), typeof(TabView), Color.FromHex("#42a5f5"),
+            BindableProperty.Create(nameof(SelectedColor), typeof(Color), typeof(TabView),
                 propertyChanged: OnChangedSelectedColor);
         public Color SelectedColor
         {
@@ -283,7 +290,7 @@ namespace TabView4
             set { SetValue(SelectedColorProperty, value); }
         }
 
-        // Selected color
+        // Selected footer color
         public static readonly BindableProperty SelectedFooterColorProperty =
             BindableProperty.Create(nameof(SelectedFooterColor), typeof(Color), typeof(TabView),
                 propertyChanged: OnChangedSelectedFooterColor);

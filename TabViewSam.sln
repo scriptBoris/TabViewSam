@@ -15,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sample", "Sample", "{C12A9F
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{28249499-A829-4A93-B0E2-B1ED1BEEDF13}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TabView4", "Lib\TabView4.csproj", "{D61BB66E-25E0-4C39-ADD9-3A29F435E617}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TabViewSam", "Lib\TabViewSam.csproj", "{D61BB66E-25E0-4C39-ADD9-3A29F435E617}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:tab="clr-namespace:TabView4;assembly=TabView4"
+             xmlns:tab="clr-namespace:TabViewSam;assembly=TabViewSam"
              xmlns:local="clr-namespace:Sample"
              mc:Ignorable="d"
              x:Class="Sample.MainPage">
@@ -14,27 +14,53 @@
 
     <StackLayout>
         <!--TabView-->
-        <tab:TabView>
-            <tab:Tab Title="{Binding TabTitle1}"
+        <tab:TabView SelectedFooterColor="White">
+            <tab:Tab Title="Photos"
                      Icon="icon1.png"
-                     SelectedFooterColor="White"
                      IsVisible="{Binding IsShowTab1}">
-                <StackLayout>
-                    <Label Text="Big content tab1"/>
-                    <Label Text="Sample content"/>
-                    <Label Text="Big content tab1"/>
-                    <Label Text="Big content tab1"/>
+                <StackLayout Padding="15">
+                    <Label Text="Here you can get information about your uploaded photos"/>
+                    <Frame>
+                        <Grid>
+                            <Label Grid.Row="0" Grid.Column="0"
+                                   Text="Image"/>
+                            <Label Grid.Row="0" Grid.Column="1"
+                                   Text="Views"/>
+                            <Label Grid.Row="0" Grid.Column="2"
+                                   HorizontalTextAlignment="End"
+                                   Text="Downloads"/>
+
+                            <Label Grid.Row="1" Grid.Column="0"
+                                   Text="MyPhoto.png"/>
+                            <Label Grid.Row="1" Grid.Column="1"
+                                   Text="32"/>
+                            <Label Grid.Row="1" Grid.Column="2"
+                                   HorizontalTextAlignment="End"
+                                   Text="no download"/>
+
+                            <Label Grid.Row="2" Grid.Column="0"
+                                   Text="SmileCat2.png"/>
+                            <Label Grid.Row="2" Grid.Column="1"
+                                   Text="3231"/>
+                            <Label Grid.Row="2" Grid.Column="2"
+                                   HorizontalTextAlignment="End"
+                                   Text="189"/>
+                        </Grid>
+                    </Frame>
+                    <Label Text="You can upload or delete photos"/>
+                    <Button Text="Upload" BackgroundColor="GreenYellow"/>
+                    <Button Text="Delete" BackgroundColor="PaleVioletRed"/>
                 </StackLayout>
             </tab:Tab>
 
-            <tab:Tab Title="{Binding TabTitle2}"
+            <tab:Tab Title="My team"
                      Icon="icon2.png"
                      IsVisible="{Binding IsShowTab2}">
-                <StackLayout>
-                    <Label Text="Big content tab2"/>
-                    <Label Text="Big content tab2"/>
-                    <Label Text="Big content tab2"/>
-                    <Label Text="Big content tab2"/>
+                <StackLayout Padding="15">
+                    <Label Text="1.  Sam Woodman"/>
+                    <Label Text="2.  Boris Krit"/>
+                    <Label Text="3.  Alex Damb"/>
+                    <Label Text="4.  Max White"/>
                 </StackLayout>
             </tab:Tab>
 
@@ -50,13 +76,14 @@
             </tab:Tab>
         </tab:TabView>
 
-        <Button Text="Show/Hide tab1"
-                Clicked="Button_Clicked"/>
-        <Button Text="Show/Hide tab2"
-                Clicked="Button_Clicked1"/>
-        <Button Text="Show/Hide tab3"
-                Clicked="Button_Clicked2"/>
-        <Label Text="Hello"/>
+        <StackLayout VerticalOptions="EndAndExpand" Spacing="0">
+            <Button Text="Show/Hide tab1"
+                    Clicked="Button_Clicked"/>
+            <Button Text="Show/Hide tab2"
+                    Clicked="Button_Clicked1"/>
+            <Button Text="Show/Hide tab3"
+                    Clicked="Button_Clicked2"/>
+        </StackLayout>
     </StackLayout>
 
 </ContentPage>

@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Text;
 using Xamarin.Forms;
 
-namespace TabView4
+namespace TabViewSam
 {
     [Xamarin.Forms.Internals.Preserve(AllMembers = true)]
     [ContentProperty("Content")]
