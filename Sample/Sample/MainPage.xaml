@@ -14,7 +14,8 @@
 
     <StackLayout>
         <!--TabView-->
-        <tab:TabView SelectedFooterColor="White">
+        <tab:TabView SelectedFooterColor="White"
+                     TabsBackgroundColor="Accent">
             <tab:Tab Title="Photos"
                      Icon="icon1.png"
                      IsVisible="{Binding IsShowTab1}">

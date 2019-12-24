@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
+using TabViewSam.Utils;
 using Xamarin.Forms;
 
 namespace TabViewSam
@@ -51,8 +52,8 @@ namespace TabViewSam
             TabCell.GestureRecognizers.Add(tapGesture);
 
             LabelTitle.FontSize = TitleFontSize ?? host.TitleFontSize;
-            LabelTitle.TextColor = TitleColor.IsDefault ? TitleColor : host.TitleColor;
-            TabCell.BackgroundColor = BackgroundColor.IsDefault ? host.TabsBackgroundColor : BackgroundColor;
+            LabelTitle.TextColor = ColorSelector.Set(TitleColor, host.TitleColor);
+            TabCell.BackgroundColor = ColorSelector.Set(BackgroundColor, host.TabsBackgroundColor);
         }
 
         // Title

@@ -331,21 +331,5 @@ namespace TabViewSam
 
         [EditorBrowsable(EditorBrowsableState.Never)]
         public List<Tab> TabsContent => Tabs;
-
-        /// <summary>
-        /// Head background color
-        /// </summary>
-        public static readonly BindableProperty HeadBackgroundColorProperty =
-            BindableProperty.Create(nameof(HeadBackgroundColor), typeof(Color), typeof(TabView), Color.FromHex("#80d6ff"),
-                propertyChanged: (b, o, n) =>
-                {
-                    var self = (TabView)b;
-                    self.headerGrid.BackgroundColor = (Color)n;
-                });
-        public Color HeadBackgroundColor
-        {
-            get { return (Color)GetValue(HeadBackgroundColorProperty); }
-            set { SetValue(HeadBackgroundColorProperty, value); }
-        }
     }
 }
