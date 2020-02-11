@@ -11,7 +11,7 @@ namespace TabViewSam
     [ContentProperty("Content")]
     public sealed class Tab : BindableObject
     {
-        internal Grid TabCell;
+        internal Grid TabHeadCell;
         internal Label LabelTitle;
         internal Image ImageIcon;
         internal BoxView Footer;
@@ -21,10 +21,10 @@ namespace TabViewSam
 
         public Tab()
         {
-            TabCell = new Grid();
-            TabCell.RowDefinitions.Add(new RowDefinition { Height = 36 });
-            TabCell.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-            TabCell.RowDefinitions.Add(new RowDefinition { Height = 5 });
+            TabHeadCell = new Grid();
+            TabHeadCell.RowDefinitions.Add(new RowDefinition { Height = 36 });
+            TabHeadCell.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+            TabHeadCell.RowDefinitions.Add(new RowDefinition { Height = 5 });
 
             LabelTitle = new Label();
             LabelTitle.HorizontalTextAlignment = TextAlignment.Center;
@@ -37,9 +37,9 @@ namespace TabViewSam
             Footer = new BoxView();
             Grid.SetRow(Footer, 2);
 
-            TabCell.Children.Add(ImageIcon);
-            TabCell.Children.Add(LabelTitle);
-            TabCell.Children.Add(Footer);
+            TabHeadCell.Children.Add(ImageIcon);
+            TabHeadCell.Children.Add(LabelTitle);
+            TabHeadCell.Children.Add(Footer);
         }
 
         internal void SetHost(TabView host)
@@ -49,11 +49,11 @@ namespace TabViewSam
             // Tap event
             var tapGesture = new TapGestureRecognizer();
             tapGesture.Tapped += (o, e) => { host.OpenTab(TabId); };
-            TabCell.GestureRecognizers.Add(tapGesture);
+            TabHeadCell.GestureRecognizers.Add(tapGesture);
 
             LabelTitle.FontSize = TitleFontSize ?? host.TitleFontSize;
             LabelTitle.TextColor = ColorSelector.Set(TitleColor, host.TitleColor);
-            TabCell.BackgroundColor = ColorSelector.Set(BackgroundColor, host.TabsBackgroundColor);
+            TabHeadCell.BackgroundColor = ColorSelector.Set(BackgroundColor, host.TabsBackgroundColor);
         }
 
         // Title
@@ -107,7 +107,7 @@ namespace TabViewSam
                 {
                     var self = b as Tab;
                     if (self.IsSelected)
-                        self.TabCell.BackgroundColor = (Color)n;
+                        self.TabHeadCell.BackgroundColor = (Color)n;
                 });
         public Color SelectedColor
         {
@@ -137,7 +137,7 @@ namespace TabViewSam
                 {
                     var self = b as Tab;
                     if (!self.IsSelected)
-                        self.TabCell.BackgroundColor = (Color)n;
+                        self.TabHeadCell.BackgroundColor = (Color)n;
                 });
         public Color BackgroundColor
         {

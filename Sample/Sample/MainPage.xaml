@@ -15,6 +15,8 @@
     <StackLayout>
         <!--TabView-->
         <tab:TabView SelectedFooterColor="White"
+                     SelectedTabIndex="{Binding SelectedTabIndex}"
+                     IsShowTabs="False"
                      TabsBackgroundColor="Accent">
             <tab:Tab Title="Photos"
                      Icon="icon1.png"
@@ -68,7 +70,7 @@
             <tab:Tab Title="{Binding TabTitle3}"
                      Icon="icon3.png"
                      IsVisible="{Binding IsShowTab3}">
-                <StackLayout>
+                <StackLayout Padding="15">
                     <Label Text="Big content tab3"/>
                     <Label Text="Big content tab3"/>
                     <Label Text="Big content tab3"/>
@@ -84,6 +86,14 @@
                     Clicked="Button_Clicked1"/>
             <Button Text="Show/Hide tab3"
                     Clicked="Button_Clicked2"/>
+            
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Selected tab index: "/>
+                <Entry Placeholder="Index tab" 
+                       Text="{Binding SelectedTabIndex}"
+                       Keyboard="Numeric"
+                       HorizontalOptions="CenterAndExpand"/>
+            </StackLayout>
         </StackLayout>
     </StackLayout>
 

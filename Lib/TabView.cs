@@ -54,7 +54,7 @@ namespace TabViewSam
             {
                 item.SetHost(this);
                 item.TabId = i;
-                headerGrid.Children.Add(item.TabCell);
+                headerGrid.Children.Add(item.TabHeadCell);
 
                 // Add content
                 if (item.Content != null)
@@ -69,7 +69,7 @@ namespace TabViewSam
                     {
                         Width = new GridLength(1, GridUnitType.Star)
                     });
-                    SetColumn(item.TabCell, actualId);
+                    SetColumn(item.TabHeadCell, actualId);
                     actualId++;
 
                     if (SelectedTab == null)
@@ -92,7 +92,7 @@ namespace TabViewSam
             if (tab == null)
                 return;
 
-            tab.TabCell.BackgroundColor = ColorSelector.Set(tab.BackgroundColor, TabsBackgroundColor);
+            tab.TabHeadCell.BackgroundColor = ColorSelector.Set(tab.BackgroundColor, TabsBackgroundColor);
             tab.Footer.BackgroundColor = Color.Default;
         }
 
@@ -115,9 +115,9 @@ namespace TabViewSam
 
             var setBg = ColorSelector.Set(n.SelectedColor, SelectedColor);
             if (!setBg.IsDefault)
-                n.TabCell.BackgroundColor = ColorSelector.Set(n.SelectedColor, SelectedColor);
+                n.TabHeadCell.BackgroundColor = ColorSelector.Set(n.SelectedColor, SelectedColor);
             else
-                n.TabCell.BackgroundColor = TabsBackgroundColor;
+                n.TabHeadCell.BackgroundColor = TabsBackgroundColor;
 
             n.Footer.BackgroundColor = ColorSelector.Set(n.SelectedFooterColor, SelectedFooterColor);
 
@@ -157,7 +157,7 @@ namespace TabViewSam
                 return;
 
             if (self.SelectedTab.SelectedColor.IsDefault)
-                self.SelectedTab.TabCell.BackgroundColor = (Color)n;
+                self.SelectedTab.TabHeadCell.BackgroundColor = (Color)n;
         }
 
         private static void OnChangedSelectedFooterColor(BindableObject b, object o, object n)
@@ -179,25 +179,53 @@ namespace TabViewSam
             foreach (var item in self.Tabs)
             {
                 if (!item.BackgroundColor.IsDefault && item != self.SelectedTab)
-                    item.TabCell.BackgroundColor = (Color)n;
+                    item.TabHeadCell.BackgroundColor = (Color)n;
             }
+        }
+
+        private static void OnChangedIsShowTabs(BindableObject b, object o, object n)
+        {
+            var self = b as TabView;
+            bool value = (bool)n;
+            self.headerGrid.IsVisible = value;
+        }
+
+        private static void OnChangedSelectedTabIndex(BindableObject b, object o, object n)
+        {
+            var self = b as TabView;
+            int index = (int)n;
+
+            if (self.Tabs.Count == 0)
+                return;
+
+            if (index < 0)
+                index = 0;
+
+            if (index > self.Tabs.Count - 1)
+                index = self.Tabs.Count - 1;
+
+            self.OpenTab(index);
+            //self.SelectedTab = self.Tabs[index];
         }
 
         internal void UpdateTabsVisibility(Tab tabChanged, bool isVisible)
         {
-            tabChanged.TabCell.IsVisible = isVisible;
-
-            foreach (var item in Tabs)
+            if (IsShowTabs)
             {
-                var definition = headerGrid.ColumnDefinitions[item.TabId];
+                tabChanged.TabHeadCell.IsVisible = isVisible;
 
-                if (item.TabCell.IsVisible)
+                foreach (var item in Tabs)
                 {
-                    definition.Width = GridLength.Star;
-                }
-                else
-                {
-                    definition.Width = new GridLength(0, GridUnitType.Absolute);
+                    var definition = headerGrid.ColumnDefinitions[item.TabId];
+
+                    if (item.TabHeadCell.IsVisible)
+                    {
+                        definition.Width = GridLength.Star;
+                    }
+                    else
+                    {
+                        definition.Width = new GridLength(0, GridUnitType.Absolute);
+                    }
                 }
             }
 
@@ -216,6 +244,12 @@ namespace TabViewSam
 
                 if (SelectedTab == tabChanged)
                     SelectedTab = null;
+            }
+            // Set visible if no content
+            else if (SelectedTab == null && isVisible)
+            {
+                SelectedTab = tabChanged;
+                SelectedTab.Content.IsVisible = true;
             }
         }
 
@@ -308,6 +342,26 @@ namespace TabViewSam
         {
             get { return (Color)GetValue(TabsBackgroundColorProperty); }
             set { SetValue(TabsBackgroundColorProperty, value); }
+        }
+
+        // Is show tabs
+        public static readonly BindableProperty IsShowTabsProperty =
+            BindableProperty.Create(nameof(IsShowTabs), typeof(bool), typeof(TabView), true,
+                propertyChanged: OnChangedIsShowTabs);
+        public bool IsShowTabs
+        {
+            get { return (bool)GetValue(IsShowTabsProperty); }
+            set { SetValue(IsShowTabsProperty, value); }
+        }
+
+        // Selected tab index
+        public static readonly BindableProperty SelectedTabIndexProperty =
+            BindableProperty.Create(nameof(SelectedTabIndex), typeof(int), typeof(TabView), 0,
+                propertyChanged: OnChangedSelectedTabIndex);
+        public int SelectedTabIndex
+        {
+            get { return (int)GetValue(SelectedTabIndexProperty); }
+            set { SetValue(SelectedTabIndexProperty, value); }
         }
 
         /// <summary>

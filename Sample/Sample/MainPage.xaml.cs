@@ -20,13 +20,15 @@ namespace Sample
             InitializeComponent();
         }
 
-        public string TabTitle1 { get; set; } = "Tab1";
-        public string TabTitle2 { get; set; } = "Tab2";
-        public string TabTitle3 { get; set; } = "Tab3";
+        public int SelectedTabIndex { get; set; } = 1;
+
+        public string TabTitle1 { get; set; } = "Photos";
+        public string TabTitle2 { get; set; } = "My team";
+        public string TabTitle3 { get; set; } = "Calendar";
 
         public bool IsShowTab1 { get; set; } = true;
         public bool IsShowTab2 { get; set; } = true;
-        public bool IsShowTab3 { get; set; } = false;
+        public bool IsShowTab3 { get; set; } = true;
 
 
         private void Button_Clicked(object sender, EventArgs e)
