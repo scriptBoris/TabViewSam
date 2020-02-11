@@ -2,10 +2,26 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Boris Krit</Authors>
+    <Company>Boris Krit</Company>
+    <Description>Onvenient element for display TabView in Xamarin.Forms</Description>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/scriptBoris/TabViewSam</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/scriptBoris/TabViewSam</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>tabView, xamarin.forms, forms, xamarin, tab, TabViewSam</PackageTags>
+    <NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Xamarin.Forms" Version="3.2.0.839982" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
